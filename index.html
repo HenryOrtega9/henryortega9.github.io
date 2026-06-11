@@ -366,68 +366,14 @@
 
 <section class="wrap">
   <div class="sec-head">
-    <span class="num">01</span><h2>AskClaude</h2>
-    <a class="repo-link" href="https://github.com/HenryOrtega9/ask-claude-watch">ask-claude-watch →</a>
-  </div>
-  <div class="tags">
-    <span class="tag">Swift</span><span class="tag">SwiftUI</span><span class="tag">watchOS</span>
-    <span class="tag">WidgetKit</span><span class="tag">background URLSession</span>
-  </div>
-  <div class="cols">
-    <div class="copy">
-      <p>
-        A standalone Apple Watch app for talking to Claude Code from the wrist.
-        Dictate a question, get an answer with full conversation context, switch
-        models and reasoning effort from a Settings picker.
-      </p>
-      <ul>
-        <li><strong>Done notifications.</strong> Lowering the wrist mid-turn arms a
-        background URLSession long-poll; when the turn finishes, watchOS wakes the app
-        and a local notification delivers the reply. No APNs, no server push.</li>
-        <li><strong>Sessions tab.</strong> Lists every live Claude session on the Mac
-        and can send input into tmux-hosted ones.</li>
-        <li><strong>Complications.</strong> Activity-style dual rings render plan-limit
-        usage on the watch face, refreshed inside the WidgetKit budget.</li>
-        <li><strong>Hardened by a multi-agent review</strong>: 21 agents swept the
-        codebase, 10 confirmed bugs fixed, 4 false positives rejected by adversarial
-        verification.</li>
-      </ul>
-    </div>
-    <div class="visual watch-scene">
-      <div class="watch">
-        <div class="face">
-          <div class="title">AskClaude</div>
-          <div class="bubble user">What did I plan for CFA week 3?</div>
-          <div class="bubble bot">Week 3 starts Financial Statement Analysis: 48 hours scheduled across…<span class="ptag">partial</span></div>
-          <div class="thinking">thinking <i>·</i><i>·</i><i>·</i></div>
-        </div>
-      </div>
-      <div class="comp-card">
-        <svg width="120" height="120" viewBox="0 0 120 120">
-          <circle cx="60" cy="60" r="50" fill="none" stroke="#2a2e35" stroke-width="9"/>
-          <circle id="ring-outer" class="ring-anim" cx="60" cy="60" r="50" fill="none" stroke="#e8704a" stroke-width="9"
-                  stroke-linecap="round" stroke-dasharray="314.2" stroke-dashoffset="314.2" transform="rotate(-90 60 60)"/>
-          <circle cx="60" cy="60" r="36" fill="none" stroke="#2a2e35" stroke-width="9"/>
-          <circle id="ring-inner" class="ring-anim" cx="60" cy="60" r="36" fill="none" stroke="#5fd4a7" stroke-width="9"
-                  stroke-linecap="round" stroke-dasharray="226.2" stroke-dashoffset="226.2" transform="rotate(-90 60 60)"/>
-          <text x="60" y="69" text-anchor="middle" fill="#e8704a" font-size="26" font-weight="700">✱</text>
-        </svg>
-        <span>usage complication<br>outer 5-hour · inner 7-day</span>
-      </div>
-    </div>
-  </div>
-</section>
-
-<section class="wrap">
-  <div class="sec-head">
-    <span class="num">02</span><h2>claude-cli-chat</h2>
+    <span class="num">01</span><h2>claude-cli-chat</h2>
     <a class="repo-link" href="https://github.com/HenryOrtega9/claude-cli-chat">claude-cli-chat →</a>
   </div>
   <div class="tags">
     <span class="tag">TypeScript</span><span class="tag">Obsidian API</span>
     <span class="tag">stream-json</span><span class="tag">subprocess orchestration</span>
   </div>
-  <div class="cols flip">
+  <div class="cols">
     <div class="copy">
       <p>
         An Obsidian plugin that turns the Claude Code CLI into a native chat UI inside
@@ -474,6 +420,60 @@
             <span class="send">➤</span>
           </div>
         </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="wrap">
+  <div class="sec-head">
+    <span class="num">02</span><h2>AskClaude</h2>
+    <a class="repo-link" href="https://github.com/HenryOrtega9/ask-claude-watch">ask-claude-watch →</a>
+  </div>
+  <div class="tags">
+    <span class="tag">Swift</span><span class="tag">SwiftUI</span><span class="tag">watchOS</span>
+    <span class="tag">WidgetKit</span><span class="tag">background URLSession</span>
+  </div>
+  <div class="cols flip">
+    <div class="copy">
+      <p>
+        A standalone Apple Watch app for talking to Claude Code from the wrist.
+        Dictate a question, get an answer with full conversation context, switch
+        models and reasoning effort from a Settings picker.
+      </p>
+      <ul>
+        <li><strong>Done notifications.</strong> Lowering the wrist mid-turn arms a
+        background URLSession long-poll; when the turn finishes, watchOS wakes the app
+        and a local notification delivers the reply. No APNs, no server push.</li>
+        <li><strong>Sessions tab.</strong> Lists every live Claude session on the Mac
+        and can send input into tmux-hosted ones.</li>
+        <li><strong>Complications.</strong> Activity-style dual rings render plan-limit
+        usage on the watch face, refreshed inside the WidgetKit budget.</li>
+        <li><strong>Hardened by a multi-agent review</strong>: 21 agents swept the
+        codebase, 10 confirmed bugs fixed, 4 false positives rejected by adversarial
+        verification.</li>
+      </ul>
+    </div>
+    <div class="visual watch-scene">
+      <div class="watch">
+        <div class="face">
+          <div class="title">AskClaude</div>
+          <div class="bubble user">What did I plan for CFA week 3?</div>
+          <div class="bubble bot">Week 3 starts Financial Statement Analysis: 48 hours scheduled across…<span class="ptag">partial</span></div>
+          <div class="thinking">thinking <i>·</i><i>·</i><i>·</i></div>
+        </div>
+      </div>
+      <div class="comp-card">
+        <svg width="120" height="120" viewBox="0 0 120 120">
+          <circle cx="60" cy="60" r="50" fill="none" stroke="#2a2e35" stroke-width="9"/>
+          <circle id="ring-outer" class="ring-anim" cx="60" cy="60" r="50" fill="none" stroke="#e8704a" stroke-width="9"
+                  stroke-linecap="round" stroke-dasharray="314.2" stroke-dashoffset="314.2" transform="rotate(-90 60 60)"/>
+          <circle cx="60" cy="60" r="36" fill="none" stroke="#2a2e35" stroke-width="9"/>
+          <circle id="ring-inner" class="ring-anim" cx="60" cy="60" r="36" fill="none" stroke="#5fd4a7" stroke-width="9"
+                  stroke-linecap="round" stroke-dasharray="226.2" stroke-dashoffset="226.2" transform="rotate(-90 60 60)"/>
+          <text x="60" y="69" text-anchor="middle" fill="#e8704a" font-size="26" font-weight="700">✱</text>
+        </svg>
+        <span>usage complication<br>outer 5-hour · inner 7-day</span>
       </div>
     </div>
   </div>
