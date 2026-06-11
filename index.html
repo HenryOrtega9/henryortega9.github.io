@@ -47,6 +47,18 @@
   h1 .accent { color: var(--coral); }
   .lede { max-width: 640px; color: var(--muted); font-size: 18px; }
   .hero-links { margin-top: 26px; display: flex; gap: 12px; flex-wrap: wrap; }
+  .story {
+    margin-top: 36px;
+    max-width: 720px;
+    border-left: 3px solid var(--coral);
+    background: var(--panel);
+    border-radius: 0 10px 10px 0;
+    padding: 18px 22px;
+  }
+  .story h3 { font-size: 15px; margin-bottom: 8px; }
+  .story p { color: var(--muted); font-size: 15px; margin-bottom: 10px; }
+  .story p:last-child { margin-bottom: 0; }
+  .story strong { color: var(--text); }
   .btn {
     display: inline-block;
     padding: 9px 18px;
@@ -305,6 +317,24 @@
   <div class="hero-links">
     <a class="btn primary" href="https://github.com/HenryOrtega9">GitHub: HenryOrtega9</a>
     <a class="btn" href="#ecosystem">How it fits together</a>
+  </div>
+  <div class="story">
+    <h3>Where this started</h3>
+    <p>
+      My entire life runs through an <strong>Obsidian vault</strong>: CFA study plans,
+      MBA coursework, training logs, financial models, equity research. It works as a
+      second brain, and <strong>Claude Code is the agent that operates it</strong>:
+      retrieving context across hundreds of notes, auditing the vault's structure,
+      drafting and filing new material, and remembering things between sessions.
+    </p>
+    <p>
+      Once an AI agent effectively lived in my notes, every project here followed from
+      the same question: <strong>where else do I want to reach it?</strong> Inside
+      Obsidian as a first-class chat panel. From my wrist mid-run. As a glance across
+      the desk while it works. In the Office files sitting between the notes. Each
+      tool below is one answer, and they all share the same Mac, the same vault, and
+      the same agent.
+    </p>
   </div>
 </header>
 
