@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Henry Ortega · Projects</title>
+<meta name="description" content="Tools built around Claude Code: a watchOS client, an Obsidian chat plugin, a PTY bridge daemon, a hardware status display, and an Office file viewer.">
+<link rel="icon" href="assets/askclaude-icon.png">
+<style>
+  :root {
+    --bg: #0d0f12;
+    --panel: #15181d;
+    --panel-2: #1b1f26;
+    --line: #262b33;
+    --text: #e8e6e3;
+    --muted: #9aa0a8;
+    --coral: #e8704a;
+    --mint: #5fd4a7;
+    --amber: #e3b341;
+    --blue: #6cb2f5;
+    --red: #e06c75;
+    --mono: "SF Mono", ui-monospace, Menlo, Consolas, monospace;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: var(--coral); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  .wrap { max-width: 1060px; margin: 0 auto; padding: 0 24px; }
+
+  /* ---------- hero ---------- */
+  header { padding: 88px 0 56px; }
+  .kicker {
+    font-family: var(--mono);
+    font-size: 13px;
+    color: var(--coral);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  h1 { font-size: clamp(34px, 5.5vw, 54px); line-height: 1.12; margin: 10px 0 18px; font-weight: 700; }
+  h1 .accent { color: var(--coral); }
+  .lede { max-width: 640px; color: var(--muted); font-size: 18px; }
+  .hero-links { margin-top: 26px; display: flex; gap: 12px; flex-wrap: wrap; }
+  .btn {
+    display: inline-block;
+    padding: 9px 18px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    color: var(--text);
+    font-size: 14px;
+    background: var(--panel);
+  }
+  .btn:hover { border-color: var(--coral); text-decoration: none; }
+  .btn.primary { background: var(--coral); border-color: var(--coral); color: #16110e; font-weight: 600; }
+
+  /* ---------- ecosystem diagram ---------- */
+  .diagram { margin: 24px 0 8px; }
+  .diagram-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+  }
+  .node {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 14px 16px;
+    text-align: center;
+  }
+  .node b { display: block; font-size: 14px; }
+  .node span { font-size: 12px; color: var(--muted); }
+  .link-label {
+    text-align: center;
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--muted);
+    padding: 2px 0;
+  }
+  .link-label::before { content: "│"; display: block; color: var(--line); }
+  .link-label::after { content: "▼"; display: block; color: var(--line); font-size: 9px; }
+  .hub {
+    margin-top: 14px;
+    background: linear-gradient(180deg, var(--panel-2), var(--panel));
+    border: 1px solid #3a2e28;
+    border-radius: 10px;
+    padding: 16px;
+    text-align: center;
+  }
+  .hub b { color: var(--coral); }
+  .hub span { display: block; font-size: 13px; color: var(--muted); }
+
+  /* ---------- sections / cards ---------- */
+  section { padding: 40px 0; border-top: 1px solid var(--line); }
+  .sec-head { margin-bottom: 8px; }
+  .sec-head .num { font-family: var(--mono); color: var(--coral); font-size: 14px; margin-right: 10px; }
+  h2 { font-size: 26px; display: inline; }
+  .repo-link { font-family: var(--mono); font-size: 13px; margin-left: 14px; white-space: nowrap; }
+  .tags { margin: 10px 0 16px; display: flex; gap: 8px; flex-wrap: wrap; }
+  .tag {
+    font-family: var(--mono);
+    font-size: 11.5px;
+    color: var(--muted);
+    border: 1px solid var(--line);
+    border-radius: 99px;
+    padding: 2px 10px;
+  }
+  .cols { display: grid; grid-template-columns: 1.05fr 0.95fr; gap: 36px; align-items: center; }
+  .cols.flip > .visual { order: -1; }
+  .copy p { color: var(--muted); margin-bottom: 12px; }
+  .copy ul { color: var(--muted); margin: 0 0 12px 18px; }
+  .copy li { margin-bottom: 6px; }
+  .copy strong { color: var(--text); }
+  @media (max-width: 800px) {
+    .cols, .diagram-grid { grid-template-columns: 1fr; }
+    .cols.flip > .visual { order: 0; }
+    .link-label::before, .link-label::after { display: none; }
+  }
+
+  /* ---------- watch mock ---------- */
+  .watch-scene { display: flex; gap: 28px; align-items: center; justify-content: center; flex-wrap: wrap; }
+  .watch {
+    width: 196px; height: 240px;
+    background: #000;
+    border: 3px solid #2c2f35;
+    border-radius: 46px;
+    position: relative;
+    padding: 18px 12px;
+    box-shadow: 0 18px 50px rgba(0,0,0,0.55);
+  }
+  .watch::after {
+    content: ""; position: absolute; right: -9px; top: 64px;
+    width: 6px; height: 34px; background: #2c2f35; border-radius: 3px;
+  }
+  .watch .face { height: 100%; overflow: hidden; display: flex; flex-direction: column; gap: 7px; }
+  .watch .title { font-size: 11px; color: var(--muted); text-align: center; font-family: var(--mono); }
+  .bubble {
+    max-width: 86%;
+    padding: 6px 10px;
+    border-radius: 12px;
+    font-size: 11px;
+    line-height: 1.4;
+  }
+  .bubble.user { align-self: flex-end; background: #1d4f8a; }
+  .bubble.bot  { align-self: flex-start; background: #23272e; }
+  .bubble .ptag { display: block; font-size: 8.5px; color: var(--amber); margin-top: 3px; font-family: var(--mono); }
+  .thinking { align-self: flex-start; font-size: 10px; color: var(--muted); padding-left: 4px; }
+  .thinking i { animation: blink 1.2s infinite; font-style: normal; }
+  .thinking i:nth-child(2) { animation-delay: 0.2s; }
+  .thinking i:nth-child(3) { animation-delay: 0.4s; }
+  @keyframes blink { 0%,100% { opacity: 0.2; } 50% { opacity: 1; } }
+  .comp-card { text-align: center; }
+  .comp-card svg { display: block; margin: 0 auto 8px; }
+  .comp-card span { font-size: 12px; color: var(--muted); }
+  .ring-anim { transition: stroke-dashoffset 1s ease; }
+
+  /* ---------- plugin chat mock ---------- */
+  .app-window {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 18px 50px rgba(0,0,0,0.45);
+    font-size: 12.5px;
+  }
+  .app-bar {
+    display: flex; align-items: center; gap: 6px;
+    background: var(--panel-2);
+    padding: 8px 12px;
+    border-bottom: 1px solid var(--line);
+  }
+  .dot { width: 10px; height: 10px; border-radius: 50%; }
+  .dot.r { background: #ff5f57; } .dot.y { background: #febc2e; } .dot.g { background: #28c840; }
+  .app-bar .bar-title { font-family: var(--mono); font-size: 11px; color: var(--muted); margin-left: 8px; }
+  .chat-body { padding: 14px; display: flex; flex-direction: column; gap: 10px; }
+  .msg-user { align-self: flex-end; background: #1d4f8a; border-radius: 10px; padding: 7px 12px; max-width: 75%; }
+  .msg-bot { align-self: flex-start; max-width: 92%; }
+  .tool-row {
+    font-family: var(--mono); font-size: 11px;
+    background: var(--panel-2);
+    border: 1px solid var(--line);
+    border-radius: 7px;
+    padding: 5px 10px;
+    margin-bottom: 6px;
+    color: var(--muted);
+  }
+  .tool-row .ok { color: var(--mint); }
+  .diff {
+    font-family: var(--mono); font-size: 11px;
+    background: #11141a;
+    border: 1px solid var(--line);
+    border-radius: 7px;
+    padding: 7px 10px;
+    margin-bottom: 6px;
+    white-space: pre;
+    overflow-x: auto;
+  }
+  .diff .add { color: var(--mint); }
+  .diff .del { color: var(--red); }
+  .chat-input {
+    margin: 4px 14px 14px;
+    border: 1px solid var(--line);
+    border-radius: 9px;
+    background: var(--panel-2);
+    padding: 8px 12px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .chat-input .ph { color: #5b626b; flex: 1; }
+  .pill {
+    font-family: var(--mono); font-size: 10.5px;
+    border: 1px solid var(--line); border-radius: 99px;
+    padding: 2px 9px; color: var(--muted); white-space: nowrap;
+  }
+  .pill.model { color: var(--coral); border-color: #4a342b; }
+
+  /* ---------- terminal mock ---------- */
+  .term {
+    background: #0b0d10;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    font-family: var(--mono);
+    font-size: 12px;
+    line-height: 1.75;
+    padding: 16px 18px;
+    box-shadow: 0 18px 50px rgba(0,0,0,0.45);
+    overflow-x: auto;
+  }
+  .term .c { color: #5b626b; }
+  .term .m { color: var(--blue); }
+  .term .p { color: var(--text); }
+  .term .s { color: var(--mint); }
+  .term .badge-row { margin-top: 10px; display: flex; gap: 8px; flex-wrap: wrap; }
+
+  /* ---------- LED matrix ---------- */
+  .led-scene { text-align: center; }
+  .led-frame {
+    display: inline-block;
+    background: #1a1106;
+    border: 3px solid #3a2f1d;
+    border-radius: 14px;
+    padding: 14px 16px;
+    box-shadow: 0 18px 50px rgba(0,0,0,0.55);
+  }
+  #led { display: block; image-rendering: pixelated; }
+  .led-state {
+    margin-top: 12px;
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--muted);
+  }
+  .led-state b { color: var(--coral); }
+
+  /* ---------- office mock ---------- */
+  .office-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+  .file-card {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 12px;
+  }
+  .file-card .ext { font-family: var(--mono); font-size: 11px; margin-bottom: 8px; display: block; }
+  .ext.docx { color: var(--blue); } .ext.pptx { color: var(--coral); } .ext.xlsx { color: var(--mint); }
+  .doc-line { height: 5px; border-radius: 3px; background: #2b313a; margin-bottom: 6px; }
+  .doc-line.short { width: 60%; }
+  .slide {
+    background: #11141a; border: 1px solid var(--line); border-radius: 6px;
+    aspect-ratio: 16/9; padding: 8px; display: flex; flex-direction: column; gap: 5px;
+  }
+  .slide .t { height: 7px; width: 70%; background: var(--coral); opacity: 0.7; border-radius: 3px; }
+  .slide .l { height: 4px; width: 90%; background: #2b313a; border-radius: 2px; }
+  .sheet { display: grid; grid-template-columns: repeat(4, 1fr); gap: 2px; }
+  .cell { background: #11141a; border: 1px solid #232831; height: 14px; }
+  .cell.hl { background: rgba(95, 212, 167, 0.18); }
+  @media (max-width: 800px) { .office-grid { grid-template-columns: repeat(3, 1fr); } }
+
+  footer {
+    border-top: 1px solid var(--line);
+    padding: 36px 0 56px;
+    color: var(--muted);
+    font-size: 14px;
+  }
+</style>
+</head>
+<body>
+
+<header class="wrap">
+  <div class="kicker">Henry Ortega · Project Portfolio</div>
+  <h1>Tools I built around <span class="accent">Claude Code</span></h1>
+  <p class="lede">
+    An ecosystem of self-built clients and daemons that put one AI coding agent on every
+    surface I use: an Obsidian plugin, an Apple Watch app, a hardware status display,
+    and the Mac-side infrastructure that ties them together. All open source.
+  </p>
+  <div class="hero-links">
+    <a class="btn primary" href="https://github.com/HenryOrtega9">GitHub: HenryOrtega9</a>
+    <a class="btn" href="#ecosystem">How it fits together</a>
+  </div>
+</header>
+
+<section id="ecosystem" class="wrap diagram">
+  <div class="sec-head"><span class="num">00</span><h2>The ecosystem</h2></div>
+  <p class="copy lede" style="font-size:15px; margin-bottom:20px;">
+    Everything routes through one Mac running Claude Code. Each surface speaks the
+    protocol that fits it best.
+  </p>
+  <div class="diagram-grid">
+    <div>
+      <div class="node"><b>Obsidian plugin</b><span>chat UI in the vault</span></div>
+      <div class="link-label">stream-json over stdio</div>
+    </div>
+    <div>
+      <div class="node"><b>Apple Watch app</b><span>chat, sessions, usage rings</span></div>
+      <div class="link-label">HTTP over Tailscale, via bridge daemon</div>
+    </div>
+    <div>
+      <div class="node"><b>TC001 LED matrix</b><span>physical status light</span></div>
+      <div class="link-label">AWTRIX HTTP API, via launchd daemon</div>
+    </div>
+  </div>
+  <div class="hub">
+    <b>Claude Code CLI on the Mac</b>
+    <span>subprocesses, a PTY-held interactive session, and a state emitter</span>
+  </div>
+</section>
+
+<section class="wrap">
+  <div class="sec-head">
+    <span class="num">01</span><h2>AskClaude</h2>
+    <a class="repo-link" href="https://github.com/HenryOrtega9/ask-claude-watch">ask-claude-watch →</a>
+  </div>
+  <div class="tags">
+    <span class="tag">Swift</span><span class="tag">SwiftUI</span><span class="tag">watchOS</span>
+    <span class="tag">WidgetKit</span><span class="tag">background URLSession</span>
+  </div>
+  <div class="cols">
+    <div class="copy">
+      <p>
+        A standalone Apple Watch app for talking to Claude Code from the wrist.
+        Dictate a question, get an answer with full conversation context, switch
+        models and reasoning effort from a Settings picker.
+      </p>
+      <ul>
+        <li><strong>Done notifications.</strong> Lowering the wrist mid-turn arms a
+        background URLSession long-poll; when the turn finishes, watchOS wakes the app
+        and a local notification delivers the reply. No APNs, no server push.</li>
+        <li><strong>Sessions tab.</strong> Lists every live Claude session on the Mac
+        and can send input into tmux-hosted ones.</li>
+        <li><strong>Complications.</strong> Activity-style dual rings render plan-limit
+        usage on the watch face, refreshed inside the WidgetKit budget.</li>
+        <li><strong>Hardened by a multi-agent review</strong>: 21 agents swept the
+        codebase, 10 confirmed bugs fixed, 4 false positives rejected by adversarial
+        verification.</li>
+      </ul>
+    </div>
+    <div class="visual watch-scene">
+      <div class="watch">
+        <div class="face">
+          <div class="title">AskClaude</div>
+          <div class="bubble user">What did I plan for CFA week 3?</div>
+          <div class="bubble bot">Week 3 starts Financial Statement Analysis: 48 hours scheduled across…<span class="ptag">partial</span></div>
+          <div class="thinking">thinking <i>·</i><i>·</i><i>·</i></div>
+        </div>
+      </div>
+      <div class="comp-card">
+        <svg width="120" height="120" viewBox="0 0 120 120">
+          <circle cx="60" cy="60" r="50" fill="none" stroke="#2a2e35" stroke-width="9"/>
+          <circle id="ring-outer" class="ring-anim" cx="60" cy="60" r="50" fill="none" stroke="#e8704a" stroke-width="9"
+                  stroke-linecap="round" stroke-dasharray="314.2" stroke-dashoffset="314.2" transform="rotate(-90 60 60)"/>
+          <circle cx="60" cy="60" r="36" fill="none" stroke="#2a2e35" stroke-width="9"/>
+          <circle id="ring-inner" class="ring-anim" cx="60" cy="60" r="36" fill="none" stroke="#5fd4a7" stroke-width="9"
+                  stroke-linecap="round" stroke-dasharray="226.2" stroke-dashoffset="226.2" transform="rotate(-90 60 60)"/>
+          <text x="60" y="69" text-anchor="middle" fill="#e8704a" font-size="26" font-weight="700">✱</text>
+        </svg>
+        <span>usage complication<br>outer 5-hour · inner 7-day</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="wrap">
+  <div class="sec-head">
+    <span class="num">02</span><h2>claude-cli-chat</h2>
+    <a class="repo-link" href="https://github.com/HenryOrtega9/claude-cli-chat">claude-cli-chat →</a>
+  </div>
+  <div class="tags">
+    <span class="tag">TypeScript</span><span class="tag">Obsidian API</span>
+    <span class="tag">stream-json</span><span class="tag">subprocess orchestration</span>
+  </div>
+  <div class="cols flip">
+    <div class="copy">
+      <p>
+        An Obsidian plugin that turns the Claude Code CLI into a native chat UI inside
+        my knowledge vault. Each tab spawns its own CLI subprocess and renders the
+        line-delimited JSON event stream as bubbles, tool rows, and file diffs.
+      </p>
+      <ul>
+        <li><strong>Built against the wire protocol.</strong> The plugin is a
+        programmatic client over <code style="font-family:var(--mono);font-size:12px">claude --output-format stream-json</code>,
+        with a typed parser and a documented list of protocol gotchas found the hard way.</li>
+        <li><strong>Remote Control mode</strong> drives a full interactive session
+        through a Python PTY proxy.</li>
+        <li><strong>Per-vault MCP management</strong>, file pins for context, a model
+        and effort picker, and auto-titled tabs.</li>
+      </ul>
+    </div>
+    <div class="visual">
+      <div class="app-window">
+        <div class="app-bar">
+          <span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>
+          <span class="bar-title">Claude · Second Brain vault</span>
+        </div>
+        <div class="chat-body">
+          <div class="msg-user">Fix the broken links in my CFA index</div>
+          <div class="msg-bot">
+            <div class="tool-row"><span class="ok">✓</span> Read · CFA Level 1/Index.md</div>
+            <div class="tool-row"><span class="ok">✓</span> Edit · CFA Level 1/Index.md</div>
+            <div class="diff"><span class="del">- [[Quantitive Methods]]</span>
+<span class="add">+ [[Quantitative Methods]]</span></div>
+            Fixed two broken wiki-links; both targets verified.
+          </div>
+        </div>
+        <div class="chat-input">
+          <span class="ph">Ask about the vault…</span>
+          <span class="pill model">Fable 5</span>
+          <span class="pill">effort: high</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="wrap">
+  <div class="sec-head">
+    <span class="num">03</span><h2>watch-bridge</h2>
+    <a class="repo-link" href="https://github.com/HenryOrtega9/claude-cli-chat/tree/main/scripts/watch-bridge">claude-cli-chat/scripts →</a>
+  </div>
+  <div class="tags">
+    <span class="tag">Python (stdlib only)</span><span class="tag">PTY</span>
+    <span class="tag">launchd</span><span class="tag">Tailscale</span><span class="tag">OAuth</span>
+  </div>
+  <div class="cols">
+    <div class="copy">
+      <p>
+        The Mac-side daemon behind the watch app. It holds one interactive
+        Claude session on a pseudo-terminal, parses the TUI, and exposes the session
+        as a clean bearer-authed HTTP API bound only to the Tailscale interface.
+      </p>
+      <ul>
+        <li><strong>Drives a terminal UI programmatically</strong>: auto-accepts trust
+        and permission dialogs, replays sticky model choices into respawned sessions,
+        and guards against swallowed keystrokes with timed nudges.</li>
+        <li><strong>Turn lifecycle engine</strong> with a reply budget: long turns
+        return 202 partials the client can poll, and a long-poll endpoint backs the
+        watch's background notifications.</li>
+        <li><strong>Session directory</strong> discovers every live Claude process on
+        the machine and maps each one to its transcript.</li>
+      </ul>
+    </div>
+    <div class="visual">
+      <div class="term">
+        <div><span class="c"># bearer-authed API, Tailscale-only bind</span></div>
+        <div><span class="m">POST</span> <span class="p">/chat</span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="c">one turn · 202 partial on budget</span></div>
+        <div><span class="m">GET</span>&nbsp; <span class="p">/wait</span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="c">long-poll until the turn completes</span></div>
+        <div><span class="m">GET</span>&nbsp; <span class="p">/sessions</span>&nbsp;<span class="c">every live claude on this Mac</span></div>
+        <div><span class="m">POST</span> <span class="p">/command</span>&nbsp;<span class="c">/model · /effort, session-scoped</span></div>
+        <div><span class="m">GET</span>&nbsp; <span class="p">/usage</span>&nbsp;&nbsp;&nbsp;<span class="c">OAuth proxy for plan limits</span></div>
+        <div style="margin-top:8px"><span class="s">$ launchctl kickstart -k gui/501/…watch-bridge</span></div>
+        <div class="badge-row">
+          <span class="pill">zero dependencies</span>
+          <span class="pill">single file</span>
+          <span class="pill">survives reboots</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="wrap">
+  <div class="sec-head">
+    <span class="num">04</span><h2>TC001 status display</h2>
+    <a class="repo-link" href="https://github.com/HenryOrtega9/claude-cli-chat/tree/main/scripts">claude-cli-chat/scripts →</a>
+  </div>
+  <div class="tags">
+    <span class="tag">Python</span><span class="tag">AWTRIX 3</span>
+    <span class="tag">32×8 RGB matrix</span><span class="tag">pixel animation</span>
+  </div>
+  <div class="cols flip">
+    <div class="copy">
+      <p>
+        A physical status light for Claude Code: an Ulanzi TC001 LED matrix on my desk
+        mirrors the agent's live state. A glance tells me whether it is thinking,
+        running tools, waiting for approval, or done, without switching windows.
+      </p>
+      <ul>
+        <li><strong>Hand-drawn pixel animations</strong> per state, pushed at 300 ms
+        intervals by a launchd daemon polling the plugin's state emitter.</li>
+        <li><strong>Frames are run-length compressed</strong> into rectangle draw calls,
+        because the firmware rejects payloads past roughly 100 draw items.</li>
+        <li><strong>A browser preview mirrors the renderer pixel for pixel</strong>, so
+        animations are designed on screen before touching the device. The animation
+        on the left runs the same frame logic in JavaScript.</li>
+      </ul>
+    </div>
+    <div class="visual led-scene">
+      <div class="led-frame">
+        <canvas id="led" width="512" height="128"></canvas>
+      </div>
+      <div class="led-state">state: <b id="led-label">thinking</b></div>
+    </div>
+  </div>
+</section>
+
+<section class="wrap">
+  <div class="sec-head">
+    <span class="num">05</span><h2>Microsoft Office Viewer</h2>
+    <a class="repo-link" href="https://github.com/HenryOrtega9/obsidian-msoffice-viewer">obsidian-msoffice-viewer →</a>
+  </div>
+  <div class="tags">
+    <span class="tag">TypeScript</span><span class="tag">PDF.js</span>
+    <span class="tag">ExcelJS</span><span class="tag">LibreOffice headless</span>
+  </div>
+  <div class="cols">
+    <div class="copy">
+      <p>
+        An Obsidian plugin that renders Word, PowerPoint, and Excel files read-only
+        inside the vault, so coursework and financial models stay browsable next to
+        the notes that reference them.
+      </p>
+      <ul>
+        <li><strong>Three rendering pipelines</strong>: docx-preview for Word,
+        a headless LibreOffice-to-PDF conversion drawn with PDF.js for PowerPoint,
+        and an ExcelJS grid with frozen panes and merged cells for Excel.</li>
+        <li><strong>Claude-driven file creation</strong>: a modal shells out to the
+        Claude Code CLI to generate new Office files straight into the vault.</li>
+        <li>Native-app handoff for the cases where read-only is not enough.</li>
+      </ul>
+    </div>
+    <div class="visual office-grid">
+      <div class="file-card">
+        <span class="ext docx">.docx</span>
+        <div class="doc-line" style="width:80%"></div>
+        <div class="doc-line"></div>
+        <div class="doc-line"></div>
+        <div class="doc-line short"></div>
+        <div class="doc-line"></div>
+        <div class="doc-line" style="width:72%"></div>
+      </div>
+      <div class="file-card">
+        <span class="ext pptx">.pptx</span>
+        <div class="slide">
+          <div class="t"></div>
+          <div class="l"></div>
+          <div class="l" style="width:75%"></div>
+          <div class="l" style="width:60%"></div>
+        </div>
+      </div>
+      <div class="file-card">
+        <span class="ext xlsx">.xlsx</span>
+        <div class="sheet">
+          <div class="cell hl"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div>
+          <div class="cell"></div><div class="cell hl"></div><div class="cell"></div><div class="cell"></div>
+          <div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell hl"></div>
+          <div class="cell"></div><div class="cell"></div><div class="cell hl"></div><div class="cell"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    Henry Ortega · MBA candidate (Finance), Daniels College of Business ·
+    <a href="https://github.com/HenryOrtega9">github.com/HenryOrtega9</a>
+    <br>All mockups on this page are hand-built HTML, CSS, and canvas. No screenshots, no stock art.
+  </div>
+</footer>
+
+<script>
+/* ---- LED matrix: same idea as the real animator, 32x8 pixels ---- */
+(function () {
+  const canvas = document.getElementById("led");
+  const label = document.getElementById("led-label");
+  const ctx = canvas.getContext("2d");
+  const COLS = 32, ROWS = 8, CELL = 16;
+
+  const COLORS = { coral: "#e8704a", mint: "#5fd4a7", amber: "#e3b341", dim: "#241a0e" };
+
+  // 6x4 crab sprite, two leg frames
+  const CRAB = [
+    ["x....x", ".xxxx.", "xxxxxx", "x.x.x."],
+    ["x....x", ".xxxx.", "xxxxxx", ".x.x.x"],
+  ];
+
+  function clear(grid) {
+    for (let y = 0; y < ROWS; y++) for (let x = 0; x < COLS; x++) grid[y][x] = null;
+  }
+
+  function blit(grid, sprite, ox, oy, color) {
+    sprite.forEach((row, y) => {
+      [...row].forEach((ch, x) => {
+        const gx = ox + x, gy = oy + y;
+        if (ch === "x" && gx >= 0 && gx < COLS && gy >= 0 && gy < ROWS) grid[gy][gx] = color;
+      });
+    });
+  }
+
+  const STATES = ["thinking", "tool use", "done", "idle"];
+  let stateIdx = 0, tick = 0;
+  const grid = Array.from({ length: ROWS }, () => Array(COLS).fill(null));
+
+  function frame() {
+    clear(grid);
+    const state = STATES[stateIdx];
+
+    if (state === "thinking") {
+      // three dots sweeping brightness
+      for (let i = 0; i < 3; i++) {
+        const on = (tick % 3) === i;
+        const x = 13 + i * 3;
+        grid[3][x] = on ? COLORS.coral : COLORS.dim;
+        grid[4][x] = on ? COLORS.coral : COLORS.dim;
+      }
+    } else if (state === "tool use") {
+      // progress sweep
+      const w = (tick * 2) % (COLS + 8);
+      for (let x = 0; x < COLS; x++) {
+        if (x < w && x > w - 8) { grid[3][x] = COLORS.mint; grid[4][x] = COLORS.mint; }
+      }
+    } else if (state === "done") {
+      // check mark
+      const check = [[12,5],[13,6],[14,5],[15,4],[16,3],[17,2],[13,5],[15,5],[16,4]];
+      check.forEach(([x,y]) => { grid[y][x] = COLORS.mint; });
+    } else {
+      // idle: walking crab
+      const x = (tick % (COLS + 8)) - 6;
+      blit(grid, CRAB[tick % 2], x, 2, COLORS.coral);
+    }
+
+    // render
+    ctx.fillStyle = "#120c04";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    for (let y = 0; y < ROWS; y++) {
+      for (let x = 0; x < COLS; x++) {
+        ctx.fillStyle = grid[y][x] || "#1c1407";
+        ctx.beginPath();
+        ctx.arc(x * CELL + CELL / 2, y * CELL + CELL / 2, CELL / 2 - 2.2, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+
+    tick++;
+    if (tick % 14 === 0) {
+      stateIdx = (stateIdx + 1) % STATES.length;
+      label.textContent = STATES[stateIdx];
+    }
+  }
+
+  setInterval(frame, 280);
+  frame();
+})();
+
+/* ---- complication rings animate in when visible ---- */
+(function () {
+  const outer = document.getElementById("ring-outer");
+  const inner = document.getElementById("ring-inner");
+  const obs = new IntersectionObserver((entries) => {
+    entries.forEach((e) => {
+      if (e.isIntersecting) {
+        outer.style.strokeDashoffset = 314.2 * (1 - 0.62);
+        inner.style.strokeDashoffset = 226.2 * (1 - 0.38);
+        obs.disconnect();
+      }
+    });
+  }, { threshold: 0.4 });
+  obs.observe(outer.closest("svg"));
+})();
+</script>
+
+</body>
+</html>
