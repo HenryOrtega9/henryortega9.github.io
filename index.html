@@ -123,6 +123,7 @@
     padding: 2px 10px;
   }
   .cols { display: grid; grid-template-columns: 1.05fr 0.95fr; gap: 36px; align-items: center; }
+  .cols > * { min-width: 0; }
   .cols.flip > .visual { order: -1; }
   .copy p { color: var(--muted); margin-bottom: 12px; }
   .copy ul { color: var(--muted); margin: 0 0 12px 18px; }
@@ -255,7 +256,7 @@
   .term .badge-row { margin-top: 10px; display: flex; gap: 8px; flex-wrap: wrap; }
 
   /* ---------- LED matrix ---------- */
-  .led-scene { text-align: center; }
+  .led-scene { text-align: center; max-width: 100%; }
   .led-frame {
     display: inline-block;
     background: #1a1106;
@@ -263,6 +264,9 @@
     border-radius: 14px;
     padding: 14px 16px;
     box-shadow: 0 18px 50px rgba(0,0,0,0.55);
+    max-width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
   }
   #led { display: block; image-rendering: pixelated; }
   .led-state {
