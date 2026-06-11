@@ -168,55 +168,61 @@
     box-shadow: 0 18px 50px rgba(0,0,0,0.45);
     font-size: 12.5px;
   }
-  .app-bar {
-    display: flex; align-items: center; gap: 6px;
-    background: var(--panel-2);
-    padding: 8px 12px;
-    border-bottom: 1px solid var(--line);
-  }
-  .dot { width: 10px; height: 10px; border-radius: 50%; }
-  .dot.r { background: #ff5f57; } .dot.y { background: #febc2e; } .dot.g { background: #28c840; }
-  .app-bar .bar-title { font-family: var(--mono); font-size: 11px; color: var(--muted); margin-left: 8px; }
-  .chat-body { padding: 14px; display: flex; flex-direction: column; gap: 10px; }
-  .msg-user { align-self: flex-end; background: #1d4f8a; border-radius: 10px; padding: 7px 12px; max-width: 75%; }
-  .msg-bot { align-self: flex-start; max-width: 92%; }
-  .tool-row {
-    font-family: var(--mono); font-size: 11px;
-    background: var(--panel-2);
-    border: 1px solid var(--line);
-    border-radius: 7px;
-    padding: 5px 10px;
-    margin-bottom: 6px;
-    color: var(--muted);
-  }
-  .tool-row .ok { color: var(--mint); }
-  .diff {
-    font-family: var(--mono); font-size: 11px;
-    background: #11141a;
-    border: 1px solid var(--line);
-    border-radius: 7px;
-    padding: 7px 10px;
-    margin-bottom: 6px;
-    white-space: pre;
-    overflow-x: auto;
-  }
-  .diff .add { color: var(--mint); }
-  .diff .del { color: var(--red); }
-  .chat-input {
-    margin: 4px 14px 14px;
-    border: 1px solid var(--line);
-    border-radius: 9px;
-    background: var(--panel-2);
-    padding: 8px 12px;
-    display: flex; align-items: center; gap: 8px;
-  }
-  .chat-input .ph { color: #5b626b; flex: 1; }
   .pill {
     font-family: var(--mono); font-size: 10.5px;
     border: 1px solid var(--line); border-radius: 99px;
     padding: 2px 9px; color: var(--muted); white-space: nowrap;
   }
   .pill.model { color: var(--coral); border-color: #4a342b; }
+
+  /* ---------- obsidian sidebar mock (matches the real plugin's empty state) ---------- */
+  .obsidian-panel { background: #11151c; display: flex; flex-direction: column; min-height: 430px; }
+  .panel-head {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 10px 14px 6px;
+  }
+  .panel-title { font-weight: 600; font-size: 13.5px; }
+  .ast-sm { color: var(--coral); margin-right: 4px; }
+  .panel-icons { color: #5b626b; font-size: 12px; letter-spacing: 2px; }
+  .tab-row { display: flex; align-items: center; gap: 6px; padding: 2px 14px 10px; }
+  .tab-pill {
+    font-family: var(--mono); font-size: 11px; color: var(--muted);
+    border: 1px solid var(--line); border-radius: 6px;
+    padding: 1px 8px;
+  }
+  .tab-pill.active { border-color: var(--blue); color: var(--text); }
+  .tab-name { font-size: 12px; font-style: italic; color: var(--muted); margin-left: 6px; }
+  .greeting { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; padding: 28px 16px; }
+  .ast-big { color: var(--coral); font-size: 44px; line-height: 1; }
+  .greet-text { font-family: Georgia, "Times New Roman", serif; font-size: 19px; color: #cfccc6; }
+  .composer {
+    margin: 0 14px 14px;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    background: #151a22;
+    padding: 9px 12px 10px;
+  }
+  .composer-row { display: flex; align-items: center; gap: 8px; }
+  .composer-row.top { margin-bottom: 8px; }
+  .chip {
+    font-size: 10.5px; color: var(--muted);
+    border: 1px solid var(--line); border-radius: 99px;
+    padding: 2px 10px;
+  }
+  .chip.mode { color: var(--amber); border-color: #4a3d1e; font-weight: 700; }
+  .chip.mode span { color: var(--muted); font-weight: 400; }
+  .model-label { margin-left: auto; font-size: 11.5px; color: var(--muted); font-weight: 600; }
+  .composer-ph { color: #5b626b; font-size: 13px; padding: 2px 2px 12px; }
+  .composer-row.bottom { font-size: 11.5px; color: var(--muted); }
+  .ctl b { color: var(--text); font-weight: 600; }
+  .ctl.plus { border: 1px solid var(--line); border-radius: 5px; padding: 0 6px; }
+  .send {
+    margin-left: auto;
+    width: 26px; height: 26px; border-radius: 50%;
+    background: var(--coral); color: #16110e;
+    display: inline-flex; align-items: center; justify-content: center;
+    font-size: 12px;
+  }
 
   /* ---------- terminal mock ---------- */
   .term {
@@ -409,25 +415,34 @@
       </ul>
     </div>
     <div class="visual">
-      <div class="app-window">
-        <div class="app-bar">
-          <span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>
-          <span class="bar-title">Claude · Second Brain vault</span>
+      <div class="app-window obsidian-panel">
+        <div class="panel-head">
+          <span class="panel-title"><span class="ast-sm">✱</span> Claude</span>
+          <span class="panel-icons">⊞ &nbsp;✎ &nbsp;⧉ &nbsp;⏱</span>
         </div>
-        <div class="chat-body">
-          <div class="msg-user">Fix the broken links in my CFA index</div>
-          <div class="msg-bot">
-            <div class="tool-row"><span class="ok">✓</span> Read · CFA Level 1/Index.md</div>
-            <div class="tool-row"><span class="ok">✓</span> Edit · CFA Level 1/Index.md</div>
-            <div class="diff"><span class="del">- [[Quantitive Methods]]</span>
-<span class="add">+ [[Quantitative Methods]]</span></div>
-            Fixed two broken wiki-links; both targets verified.
+        <div class="tab-row">
+          <span class="tab-pill active">1</span>
+          <span class="tab-pill">+</span>
+          <span class="tab-name">New chat</span>
+        </div>
+        <div class="greeting">
+          <div class="ast-big">✱</div>
+          <div class="greet-text">Happy Thursday, Henry Ortega</div>
+        </div>
+        <div class="composer">
+          <div class="composer-row top">
+            <span class="chip mode">AUTO <span>Mode</span></span>
+            <span class="chip">Incognito</span>
+            <span class="model-label">Fable 5 1M</span>
           </div>
-        </div>
-        <div class="chat-input">
-          <span class="ph">Ask about the vault…</span>
-          <span class="pill model">Fable 5</span>
-          <span class="pill">effort: high</span>
+          <div class="composer-ph">How can I help you today?</div>
+          <div class="composer-row bottom">
+            <span class="ctl">Effort <b>High</b></span>
+            <span class="ctl">MCP <b>2</b></span>
+            <span class="ctl">Agents <b>0</b></span>
+            <span class="ctl plus">+</span>
+            <span class="send">➤</span>
+          </div>
         </div>
       </div>
     </div>
