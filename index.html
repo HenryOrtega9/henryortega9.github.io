@@ -300,6 +300,42 @@
   .cell.hl { background: rgba(95, 212, 167, 0.18); }
   @media (max-width: 800px) { .office-grid { grid-template-columns: repeat(3, 1fr); } }
 
+  /* ---------- interactivity ---------- */
+  .hide { display: none !important; }
+  .link-label { position: relative; }
+  .flow-dot {
+    position: absolute; left: 50%; top: 2px;
+    width: 5px; height: 5px; margin-left: -2.5px;
+    border-radius: 50%; background: var(--coral); opacity: 0;
+    animation: flow 2.2s linear infinite;
+  }
+  @keyframes flow {
+    0% { top: 2px; opacity: 0; }
+    15% { opacity: 0.9; }
+    80% { opacity: 0.9; }
+    100% { top: calc(100% - 6px); opacity: 0; }
+  }
+  .led-chips { margin-top: 10px; display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; }
+  .led-chip {
+    font-family: var(--mono); font-size: 11px;
+    color: var(--muted); background: none;
+    border: 1px solid var(--line); border-radius: 99px;
+    padding: 3px 12px; cursor: pointer;
+  }
+  .led-chip:hover { border-color: var(--coral); color: var(--text); }
+  .led-chip.active { border-color: var(--coral); color: var(--coral); }
+  .repo-meta { font-family: var(--mono); font-size: 12px; color: var(--muted); margin-left: 12px; white-space: nowrap; }
+  .repo-meta .star { color: var(--amber); }
+  .bubble.appear { animation: rise 0.3s ease; }
+  @keyframes rise { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: none; } }
+  .type-caret::after { content: "▍"; color: #5b626b; animation: blink 1.1s infinite; }
+  @media (max-width: 800px) { .flow-dot { display: none; } }
+  @media (prefers-reduced-motion: reduce) {
+    .flow-dot { display: none; }
+    .ring-anim { transition: none; }
+    .bubble.appear { animation: none; }
+  }
+
   footer {
     border-top: 1px solid var(--line);
     padding: 36px 0 56px;
@@ -351,15 +387,15 @@
   <div class="diagram-grid">
     <div>
       <div class="node"><b>Obsidian plugin</b><span>chat UI in the vault</span></div>
-      <div class="link-label">stream-json over stdio</div>
+      <div class="link-label">stream-json over stdio<span class="flow-dot"></span></div>
     </div>
     <div>
       <div class="node"><b>Apple Watch app</b><span>chat, sessions, usage rings</span></div>
-      <div class="link-label">HTTP over Tailscale, via bridge daemon</div>
+      <div class="link-label">HTTP over Tailscale, via bridge daemon<span class="flow-dot" style="animation-delay:0.7s"></span></div>
     </div>
     <div>
       <div class="node"><b>TC001 LED matrix</b><span>physical status light</span></div>
-      <div class="link-label">AWTRIX HTTP API, via launchd daemon</div>
+      <div class="link-label">AWTRIX HTTP API, via launchd daemon<span class="flow-dot" style="animation-delay:1.4s"></span></div>
     </div>
   </div>
   <div class="hub">
@@ -369,7 +405,7 @@
 </section>
 
 <section class="wrap">
-  <div class="sec-head">
+  <div class="sec-head" data-repo="claude-cli-chat">
     <span class="num">01</span><h2>claude-cli-chat</h2>
     <a class="repo-link" href="https://github.com/HenryOrtega9/claude-cli-chat">claude-cli-chat →</a>
   </div>
@@ -415,7 +451,7 @@
             <span class="chip">Incognito</span>
             <span class="model-label">Fable 5 1M</span>
           </div>
-          <div class="composer-ph">How can I help you today?</div>
+          <div class="composer-ph" id="composer-ph">How can I help you today?</div>
           <div class="composer-row bottom">
             <span class="ctl">Effort <b>High</b></span>
             <span class="ctl">MCP <b>2</b></span>
@@ -430,7 +466,7 @@
 </section>
 
 <section class="wrap">
-  <div class="sec-head">
+  <div class="sec-head" data-repo="ask-claude-watch">
     <span class="num">02</span><h2>AskClaude</h2>
     <a class="repo-link" href="https://github.com/HenryOrtega9/ask-claude-watch">ask-claude-watch →</a>
   </div>
@@ -462,9 +498,9 @@
       <div class="watch">
         <div class="face">
           <div class="title">AskClaude</div>
-          <div class="bubble user">What did I plan for CFA week 3?</div>
-          <div class="bubble bot">Week 3 starts Financial Statement Analysis: 48 hours scheduled across…<span class="ptag">partial</span></div>
-          <div class="thinking">thinking <i>·</i><i>·</i><i>·</i></div>
+          <div class="bubble user" id="w-user">What did I plan for CFA week 3?</div>
+          <div class="bubble bot" id="w-bot"><span id="w-text">Week 3 starts Financial Statement Analysis: 48 hours scheduled across…</span><span class="ptag" id="w-ptag">partial</span></div>
+          <div class="thinking" id="w-think">thinking <i>·</i><i>·</i><i>·</i></div>
         </div>
       </div>
       <div class="comp-card">
@@ -553,7 +589,8 @@
         <li><strong>The animation shown here is the device's actual frame data</strong>,
         exported from the animator's renderers and replayed at its real 300 ms push
         cadence: thinking verbs, the ready scanner, the permission alert, the DONE!
-        celebration hop, and the idle crab walk with its sleep pause.</li>
+        celebration hop, and the idle crab walk with its sleep pause. Click a
+        state chip under the bezel to drive the display yourself.</li>
       </ul>
     </div>
     <div class="visual led-scene">
@@ -561,12 +598,13 @@
         <canvas id="led" width="512" height="128"></canvas>
       </div>
       <div class="led-state">state: <b id="led-label">thinking</b></div>
+      <div class="led-chips" id="led-chips"></div>
     </div>
   </div>
 </section>
 
 <section class="wrap">
-  <div class="sec-head">
+  <div class="sec-head" data-repo="obsidian-msoffice-viewer">
     <span class="num">05</span><h2>Microsoft Office Viewer</h2>
     <a class="repo-link" href="https://github.com/HenryOrtega9/obsidian-msoffice-viewer">obsidian-msoffice-viewer →</a>
   </div>
@@ -639,7 +677,7 @@
   const ctx = canvas.getContext("2d");
   const COLS = 32, ROWS = 8, CELL = 16;
   const ORDER = ["thinking", "ready", "permission", "done", "idle"];
-  let stateIdx = 0, frameIdx = 0;
+  let stateIdx = 0, frameIdx = 0, pinned = null;
 
   function draw(frameStr) {
     ctx.fillStyle = "#120c04";
@@ -657,18 +695,39 @@
   }
 
   function tick() {
-    const state = ORDER[stateIdx];
+    const state = pinned || ORDER[stateIdx];
     const frames = DATA.states[state];
-    draw(frames[frameIdx]);
+    draw(frames[frameIdx % frames.length]);
     label.textContent = state;
     frameIdx++;
-    if (frameIdx >= frames.length) {
+    if (!pinned && frameIdx >= frames.length) {
       frameIdx = 0;
       stateIdx = (stateIdx + 1) % ORDER.length;
     }
   }
 
-  setInterval(tick, 300);  // the daemon's real push cadence
+  const chipsEl = document.getElementById("led-chips");
+  const chips = [];
+  ["auto"].concat(ORDER).forEach(function (name) {
+    const b = document.createElement("button");
+    b.type = "button";
+    b.className = "led-chip" + (name === "auto" ? " active" : "");
+    b.textContent = name;
+    b.addEventListener("click", function () {
+      pinned = name === "auto" ? null : name;
+      frameIdx = 0;
+      chips.forEach(function (c) { c.classList.remove("active"); });
+      b.classList.add("active");
+      tick();
+    });
+    chips.push(b);
+    chipsEl.appendChild(b);
+  });
+
+  // the daemon's real push cadence; reduced-motion users step frames by chip click
+  if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    setInterval(tick, 300);
+  }
   tick();
 })();
 
@@ -686,6 +745,111 @@
     });
   }, { threshold: 0.4 });
   obs.observe(outer.closest("svg"));
+})();
+
+/* ---- watch face: replay a chat exchange on loop ---- */
+(function () {
+  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  const user = document.getElementById("w-user");
+  const bot = document.getElementById("w-bot");
+  const text = document.getElementById("w-text");
+  const ptag = document.getElementById("w-ptag");
+  const think = document.getElementById("w-think");
+  const EXCHANGES = [
+    { q: "What did I plan for CFA week 3?",
+      partial: "Week 3 starts Financial Statement Analysis: 48 hours scheduled across…",
+      rest: "nine readings. Heaviest block is Thursday." },
+    { q: "Move tomorrow's long run to Sunday",
+      partial: "Done. Sunday is now the 14-miler and…",
+      rest: "Saturday becomes a rest day. Training log updated." },
+  ];
+  const wait = function (ms) { return new Promise(function (r) { setTimeout(r, ms); }); };
+  async function type(el, str) {
+    for (const ch of str) { el.textContent += ch; await wait(22); }
+  }
+  async function run() {
+    for (;;) {
+      for (const ex of EXCHANGES) {
+        user.classList.add("hide"); bot.classList.add("hide");
+        think.classList.add("hide"); ptag.classList.add("hide");
+        user.classList.remove("appear"); bot.classList.remove("appear");
+        await wait(700);
+        user.textContent = ex.q;
+        user.classList.remove("hide"); user.classList.add("appear");
+        await wait(900);
+        think.classList.remove("hide");
+        await wait(1700);
+        think.classList.add("hide");
+        text.textContent = "";
+        bot.classList.remove("hide"); bot.classList.add("appear");
+        await type(text, ex.partial);
+        ptag.classList.remove("hide");
+        await wait(1500);
+        ptag.classList.add("hide");
+        text.textContent = ex.partial.replace(/…$/, " ");
+        await type(text, ex.rest);
+        await wait(2800);
+      }
+    }
+  }
+  run();
+})();
+
+/* ---- plugin composer: placeholder types itself ---- */
+(function () {
+  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  const ph = document.getElementById("composer-ph");
+  const PHRASES = [
+    "How can I help you today?",
+    "Summarize my week 3 CFA notes",
+    "Audit the vault structure",
+    "File this deck next to the meeting note",
+  ];
+  const wait = function (ms) { return new Promise(function (r) { setTimeout(r, ms); }); };
+  const node = document.createTextNode("");
+  ph.textContent = "";
+  ph.appendChild(node);
+  ph.classList.add("type-caret");
+  async function run() {
+    for (let i = 0; ; i = (i + 1) % PHRASES.length) {
+      const p = PHRASES[i];
+      for (let n = 1; n <= p.length; n++) { node.textContent = p.slice(0, n); await wait(38); }
+      await wait(2200);
+      for (let n = p.length; n >= 0; n--) { node.textContent = p.slice(0, n); await wait(12); }
+      await wait(500);
+    }
+  }
+  run();
+})();
+
+/* ---- live repo stats from the GitHub API (no auth, fails silently) ---- */
+(function () {
+  function rel(iso) {
+    const s = (Date.now() - new Date(iso).getTime()) / 1000;
+    if (s < 3600) return Math.max(1, Math.floor(s / 60)) + "m ago";
+    if (s < 86400) return Math.floor(s / 3600) + "h ago";
+    if (s < 2592000) return Math.floor(s / 86400) + "d ago";
+    return Math.floor(s / 2592000) + "mo ago";
+  }
+  document.querySelectorAll(".sec-head[data-repo]").forEach(function (head) {
+    fetch("https://api.github.com/repos/HenryOrtega9/" + head.dataset.repo)
+      .then(function (r) { return r.ok ? r.json() : null; })
+      .then(function (d) {
+        if (!d || !d.pushed_at) return;
+        const span = document.createElement("span");
+        span.className = "repo-meta";
+        if (d.stargazers_count > 0) {
+          const star = document.createElement("span");
+          star.className = "star";
+          star.textContent = "★ " + d.stargazers_count;
+          span.appendChild(star);
+          span.appendChild(document.createTextNode(" · "));
+        }
+        span.appendChild(document.createTextNode("pushed " + rel(d.pushed_at)));
+        head.appendChild(span);
+      })
+      .catch(function () {});
+  });
 })();
 </script>
 
